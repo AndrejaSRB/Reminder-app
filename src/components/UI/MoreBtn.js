@@ -38,6 +38,7 @@ const MoreBtn = props => {
   const [direction] = React.useState("left");
   const [open, setOpen] = React.useState(false);
   const {handleEditModalOpen,handleDelete } = props;
+
   const handleEdit = () => {
     setOpen(false);
     handleEditModalOpen(true)();
@@ -50,6 +51,7 @@ const MoreBtn = props => {
       name: "Delete"
     }
   ];
+  
   const handleClick = () => {
     setOpen(prevOpen => !prevOpen);
   };

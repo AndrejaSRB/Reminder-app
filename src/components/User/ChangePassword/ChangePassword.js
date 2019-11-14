@@ -7,7 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import fire from "../../../config";
 import { useDispatch } from "react-redux";
-import * as actionTypes from "../../../store/actions/actionTypes/reminders";
+import { saveUserProfileInformation } from "../../../store/actions/actions/reminders";
 import Avatar from "@material-ui/core/Avatar";
 import Icon from "@material-ui/core/Icon";
 import Paper from "@material-ui/core/Paper";
@@ -121,13 +121,9 @@ const ChangePassword = props => {
     const { newPassword, repeatedNewPassword } = values;
     let user = fire.auth().currentUser;
     e.preventDefault();
-
     if (newPassword === repeatedNewPassword) {
       user.updatePassword(newPassword).then(() => {
-        dispatch({
-          type: actionTypes.SAVE_USER_INFORMATION,
-          payload: user
-        });
+        dispatch(saveUserProfileInformation(user));
         props.history.push("/user");
       });
     }
@@ -142,8 +138,10 @@ const ChangePassword = props => {
   };
 
   const { newPassword, repeatedNewPassword } = visible;
+
   const renderIconRepeat =
     repeatedNewPassword === "text" ? "visibility" : "visibility_off";
+    
   const renderIconNewPassword =
     newPassword === "text" ? "visibility" : "visibility_off";
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import {
   DialogTitle,
   DialogContent,
@@ -11,8 +11,8 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-import * as actionTypes from "../../store/actions/actionTypes/lists";
-import IconPicker from "../UI/IconPicker/IconPicker";
+import { editList, addList } from "../../store/actions/actions/lists";
+import Loader from "../UI/Loader";
 import { withRouter } from "react-router";
 
 const useStyles = makeStyles(theme => ({
@@ -75,11 +75,12 @@ const AddNewList = props => {
   const [name, setName] = useState("");
   const dispatch = useDispatch();
   const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
-  const [title,setTitle] = useState("Create new list");
+  const [title, setTitle] = useState("Create new list");
   const { handleAddListModal, open, list } = props;
   const user = useSelector(state => state.root.user);
   const order = useSelector(state => state.lists.lastListNumber);
-
+  const IconPicker = lazy(() => import("../UI/IconPicker/IconPicker"));
+  
   useEffect(() => {
     setpickedIcon("");
     return () => resetToDefaultValue();
@@ -99,9 +100,11 @@ const AddNewList = props => {
     setpickedIcon("");
     setTitle("Create new list");
   };
+
   const handlePickIcon = icon => {
     setpickedIcon(icon);
   };
+
   const handleIconPickerModal = isOpen => () => {
     setIsIconPickerOpen(isOpen);
   };
@@ -112,9 +115,21 @@ const AddNewList = props => {
       return name.charAt(0).toUpperCase() + name.slice(1);
     }
   };
+  
   const handleName = event => {
     setName(event.target.value);
   };
+
+  const IconPickerModal = isIconPickerOpen ? (
+    <Suspense fallback={<Loader />}>
+      <IconPicker
+        open={isIconPickerOpen}
+        handleIconPickerModal={handleIconPickerModal}
+        handlePickIcon={handlePickIcon}
+      />
+    </Suspense>
+  ) : null;
+
   const onSubmit = e => {
     e.preventDefault();
     if (!list) {
@@ -126,13 +141,12 @@ const AddNewList = props => {
         reminders: []
       };
       if (newList.icon && newList.name) {
-        dispatch({
-          type: actionTypes.ADD_LIST,
-          payload: {
+        dispatch(
+          addList({
             body: newList,
             userId: user.uid
-          }
-        });
+          })
+        );
       }
     } else {
       let newList = {
@@ -142,20 +156,21 @@ const AddNewList = props => {
         reminders: list.value.reminders
       };
       if (newList.icon && newList.name) {
-        dispatch({
-          type: actionTypes.EDIT_LIST,
-          payload: {
+        dispatch(
+          editList({
             listId: list.id,
             body: newList,
             userId: user.uid
-          }
-        });
+          })
+        );
         props.history.push("/");
       }
     }
     handleAddListModal(false)();
   };
+
   const renderButtonName = list ? "Edit" : "Add";
+
   const renderPickedIcon = pickedIcon ? (
     <Typography
       gutterBottom
@@ -166,6 +181,7 @@ const AddNewList = props => {
       You picked: <Icon>{pickedIcon}</Icon>
     </Typography>
   ) : null;
+
   return (
     <div>
       <Dialog
@@ -205,11 +221,7 @@ const AddNewList = props => {
             </div>
           </form>
         </DialogContent>
-        <IconPicker
-          open={isIconPickerOpen}
-          handleIconPickerModal={handleIconPickerModal}
-          handlePickIcon={handlePickIcon}
-        />
+        {IconPickerModal}
       </Dialog>
     </div>
   );

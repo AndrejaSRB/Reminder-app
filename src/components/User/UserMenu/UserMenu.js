@@ -6,7 +6,7 @@ import { Paper, Avatar, Typography } from "@material-ui/core";
 import CustomButton from "../../UI/CustomButton";
 import withDashboard from "../../../hoc/withDashboard";
 import { useDispatch } from "react-redux";
-import * as actionTypes from "../../../store/actions/actionTypes/reminders";
+import { deleteFilterRoute } from "../../../store/actions/actions/reminders";
 
 const useStyles = makeStyles(theme => ({
   userMenuHolder: {
@@ -84,10 +84,9 @@ const UserMenu = props => {
   const profilePictureURL = useSelector(state => state.root.profilePictureURL);
   const user = useSelector(state => state.root.user);
   const dispatch = useDispatch();
+  
   useEffect(() => {
-    dispatch({
-      type: actionTypes.DELETE_FILTER_ROUTE
-    });
+    dispatch(deleteFilterRoute());
   }, [dispatch]);
   const renderProfilePictureFromRedux = profilePictureURL ? (
     <img

@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
 import { Link } from "react-router-dom";
 import Loader from "../components/UI/Loader";
-import * as actionTypes from "../store/actions/actionTypes/reminders";
+import { deleteFilterRoute } from "../store/actions/actions/reminders";
 
 const drawerWidth = 240;
 
@@ -174,11 +174,11 @@ const withDashboard = Component => props => {
   const handleDrawerOpen = () => {
     setOpen(true);
   };
+
   const handleFilterRoute = () => {
-    dispatch({
-      type: actionTypes.DELETE_FILTER_ROUTE
-    });
+    dispatch(deleteFilterRoute());
   };
+
   const handleDrawerClose = () => {
     setOpen(false);
   };
@@ -186,6 +186,7 @@ const withDashboard = Component => props => {
   const handleAddListModal = isOpen => () => {
     setIsAddListModalOpen(isOpen);
   };
+
   const renderAddListModal = isAddListModalOpen ? (
     <Suspense fallback={<Loader />}>
       <ListModal
@@ -194,6 +195,7 @@ const withDashboard = Component => props => {
       />
     </Suspense>
   ) : null;
+  
   return (
     <div className={classes.root}>
       <div className={classes.dashboardHolder}>

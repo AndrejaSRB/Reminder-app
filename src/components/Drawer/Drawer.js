@@ -9,13 +9,14 @@ import Icon from "@material-ui/core/Icon";
 import Badge from "@material-ui/core/Badge";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import * as actionTypes from "../../store/actions/actionTypes/reminders";
+import { renderFilterRoute, userLoggedOut } from "../../store/actions/actions/reminders";
 import fire from "../../config";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Collapse from "@material-ui/core/Collapse";
 import Loader from "../UI/Loader";
+
 const useStyles = makeStyles({
   list: {
     width: 250,
@@ -88,6 +89,7 @@ const SideMenu = props => {
   const [isAddListModalOpen, setIsAddListModalOpen] = useState(false);
   const { toggleDrawer, open } = props;
   const ListModal = lazy(() => import("../Lists/ListModal"));
+
   const renderTomorrowListNumber = reminderTomorrowList ? (
     <Badge
       className={classes.badge}
@@ -132,14 +134,13 @@ const SideMenu = props => {
   };
 
   const handleClickFilter = () => {
-    dispatch({
-      type: actionTypes.RENDER_FILTER_ROUTE
-    });
+    dispatch(renderFilterRoute());
   };
 
   const handleList = () => {
     setOpenList(!openList);
   };
+
   const renderAddListModal = isAddListModalOpen ? (
     <Suspense fallback={<Loader />}>
       <ListModal
@@ -148,6 +149,7 @@ const SideMenu = props => {
       />
     </Suspense>
   ) : null;
+
   const sideList = () => (
     <div className={classes.list} role="presentation">
       <List className={classes.listItem}>
@@ -266,16 +268,16 @@ const SideMenu = props => {
       <Divider className={classes.divder} />
     </div>
   );
+
   const handleLogOut = () => {
     console.log("Logged out");
     fire.auth().signOut();
     localStorage.removeItem("user");
     localStorage.removeItem("id");
     toggleDrawer(false);
-    dispatch({
-      type: actionTypes.USER_LOGGED_OUT
-    });
+    dispatch(userLoggedOut());
   };
+  
   return (
     <div>
       <SwipeableDrawer

@@ -10,8 +10,6 @@ import ForgotPassword from "./components/Authentication/ForgotPassword/ForgotPas
 import fire from "./config";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import { useDispatch, useSelector } from "react-redux";
-import * as actionTypes from "./store/actions/actionTypes/reminders";
-import { GET_LISTS_START } from "./store/actions/actionTypes/lists";
 import BottomNavigation from "./components/BottomNavigation/BottomNavigation";
 import UserMenu from "./components/User/UserMenu/UserMenu";
 import UpdateInformation from "./components/User/UpdateInformation/UpdateInformation";
@@ -23,12 +21,18 @@ import DetailsList from "./components/Lists/DetailsList";
 import FilteredReminders from "./components/Reminders/FilteredReminders/FilteredReminders";
 import { DndProvider } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
+import {
+  getRemindersList,
+  userLoggedIn,
+  saveUserProfileInformation
+} from "./store/actions/actions/reminders";
+import { getList } from "./store/actions/actions/lists";
 
 const useStyles = makeStyles(theme => ({
   App: {
     textAlign: "center",
     backgroundColor: "#F0EFE9",
-    minHeight: "100vh",
+    minHeight: "100vh"
   }
 }));
 
@@ -47,21 +51,10 @@ const App = () => {
         if (user) {
           setPerson(user);
           localStorage.setItem("id", user.uid);
-          dispatch({
-            type: actionTypes.USER_LOGGED_IN
-          });
-          dispatch({
-            type: actionTypes.SAVE_USER_INFORMATION,
-            payload: user
-          });
-          dispatch({
-            type: actionTypes.GET_REMINDERS_LIST_START,
-            payload: user.uid
-          });
-          dispatch({
-            type: GET_LISTS_START,
-            payload: user.uid
-          });
+          dispatch(userLoggedIn());
+          dispatch(saveUserProfileInformation(user));
+          dispatch(getRemindersList(user.uid));
+          dispatch(getList(user.uid));
         } else {
           setPerson(null);
           localStorage.removeItem("id");
@@ -73,7 +66,9 @@ const App = () => {
   }, [dispatch]);
 
   const renderBottomNavigation = person ? <BottomNavigation /> : null;
+
   const renderHeader = person ? <Header /> : null;
+
   const renderFilterRoute = isFilterRouteHidden ? null : (
     <PrivateRoute
       path="/:criterium"
@@ -82,6 +77,7 @@ const App = () => {
       person={person}
     />
   );
+  
   const renderSplashScreen = displaySplashScreen ? (
     <SplashScreen />
   ) : (
@@ -111,7 +107,12 @@ const App = () => {
               component={DetailsList}
             />
 
-            <PrivateRoute path="/" exact component={ListReminders} person={person} />
+            <PrivateRoute
+              path="/"
+              exact
+              component={ListReminders}
+              person={person}
+            />
           </DndProvider>
         </ScrollToTop>
       </Switch>

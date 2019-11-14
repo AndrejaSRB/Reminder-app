@@ -109,6 +109,7 @@ const useStyles = makeStyles(theme => ({
 const LogIn = props => {
   const classes = useStyles();
   const [errorMessage, setErrorMessage] = useState("");
+  
   const onSubmit = async values => {
     fire
       .auth()
@@ -125,6 +126,7 @@ const LogIn = props => {
       {errorMessage}
     </FormHelperText>
   ) : null;
+
   return (
     <div className={classes.background}>
       <Paper className={classes.paper}>

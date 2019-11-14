@@ -5,7 +5,7 @@ import AppsIcon from "@material-ui/icons/Apps";
 import UserIcon from "@material-ui/icons/Person";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import * as actionTypes from "../../store/actions/actionTypes/reminders";
+import { deleteFilterRoute } from "../../store/actions/actions/reminders";
 
 const useStyles = makeStyles({
   root: {
@@ -44,10 +44,9 @@ const useStyles = makeStyles({
 const SimpleBottomNavigation = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  
   const handleClickFilter = () => {
-    dispatch({
-      type: actionTypes.DELETE_FILTER_ROUTE
-    });
+    dispatch(deleteFilterRoute());
   };
 
   return (

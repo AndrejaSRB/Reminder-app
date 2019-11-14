@@ -6,7 +6,7 @@ import Slide from "@material-ui/core/Slide";
 import { makeStyles } from "@material-ui/core/styles";
 import MuiDatePicker from "../MuiDatePicker/MuiDatePicker";
 import { useDispatch, useSelector } from "react-redux";
-import * as actionTypes from "../../../store/actions/actionTypes/reminders";
+import { editReminder } from "../../../store/actions/actions/reminders";
 import { Form, Field } from "react-final-form";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Select } from "final-form-material-ui";
@@ -101,17 +101,15 @@ const EditReminder = props => {
       body: values.description,
       importance: values.importance
     };
-    dispatch({
-      type: actionTypes.EDIT_REMINDER,
-      payload: {
-        body: reminder,
-        id: props.id,
-        userId: user.uid
-      }
-    });
+    dispatch(editReminder({
+      body: reminder,
+      id: props.id,
+      userId: user.uid
+    }));
     setCurrentDate(currentDate);
     handleClose();
   };
+  
   return (
     <div>
       <Dialog

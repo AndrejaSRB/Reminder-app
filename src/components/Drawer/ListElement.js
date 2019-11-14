@@ -10,7 +10,9 @@ import { Link } from "react-router-dom";
 
 const Card = props => {
   const {id, list, moveListItem, findListItem, syncListElements, classes} = props;
+  
   const originalIndex = findListItem(id).index;
+
   const [{ isDragging }, drag] = useDrag({
     item: { type: ItemTypes.CARD, id, originalIndex },
     collect: monitor => ({
@@ -29,7 +31,9 @@ const Card = props => {
       }
     },
   })
+
   const opacity = isDragging ? 0 : 1;
+
   return (
     <div ref={node => drag(drop(node))} style={{ opacity }}>
       <Link

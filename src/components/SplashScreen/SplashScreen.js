@@ -22,7 +22,7 @@ const useStyles = makeStyles({
   }
 });
 
-const SplashScreen = props => {
+const SplashScreen = () => {
   const classes = useStyles();
   return (
     <div className={classes.splashHolder}>

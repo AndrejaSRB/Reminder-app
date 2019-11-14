@@ -5,7 +5,7 @@ import Slide from "@material-ui/core/Slide";
 import { makeStyles } from "@material-ui/core/styles";
 import MuiDatePicker from "../MuiDatePicker/MuiDatePicker";
 import { useDispatch, useSelector } from "react-redux";
-import * as actionTypes from "../../../store/actions/actionTypes/reminders";
+import { postReminder } from "../../../store/actions/actions/reminders";
 import { Form, Field } from "react-final-form";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Select } from "final-form-material-ui";
@@ -16,9 +16,9 @@ import {
   validateDescription
 } from "../../Authentication/validation";
 import CustomField from "../../UI/CustomField";
-import Grid from '@material-ui/core/Grid';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogActions from '@material-ui/core/DialogActions';
+import Grid from "@material-ui/core/Grid";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogActions from "@material-ui/core/DialogActions";
 
 const useStyles = makeStyles(theme => ({
   modalContainer: {
@@ -51,6 +51,7 @@ const AddToDo = props => {
   const [currentDate, setCurrentDate] = useState("");
   const user = useSelector(state => state.root.user);
   const { handleModalAdd, open } = props;
+
   useEffect(() => {
     const convertDate = () => {
       let date = startDate.getDate();
@@ -86,19 +87,20 @@ const AddToDo = props => {
         importance: values.importance
       };
     }
-    dispatch({
-      type: actionTypes.POST_REMINDER,
-      payload: {
+    dispatch(
+      postReminder({
         body: reminder,
         userId: user.uid
-      }
-    });
+      })
+    );
 
     handleModalAdd(false);
   };
+
   const handleCloseModal = () => {
     handleModalAdd(false);
   };
+  
   return (
     <div>
       <Dialog
@@ -108,68 +110,70 @@ const AddToDo = props => {
         onClose={handleCloseModal}
         className={classes.modalContainer}
       >
-        <DialogTitle className={classes.dialogTitle}>Create new reminder</DialogTitle>
+        <DialogTitle className={classes.dialogTitle}>
+          Create new reminder
+        </DialogTitle>
         <Form
           onSubmit={onSubmit}
           render={({ handleSubmit }) => (
             <form onSubmit={handleSubmit} className={classes.form}>
-               <Grid container spacing={3} alignItems="center">
-               <Grid item xs={12}>
-              <CustomField
-                validation={validateTitle}
-                type="text"
-                placeholder="Title"
-                label="Title"
-                fullWidth={true}
-                name="title"
-                variant="outlined"
-              />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-              <Field
-                fullWidth
-                name="importance"
-                component={Select}
-                label="Select importance"
-                required
-                formControlProps={{ fullWidth: true }}
-                validate={validateImportance}
-                variant="outlined"
-              >
-                <MenuItem value="high">High</MenuItem>
-                <MenuItem value="medium">Medium</MenuItem>
-                <MenuItem value="low">Low</MenuItem>
-              </Field>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-              <Field
-                name="date"
-                validate={validateDate}
-                component={MuiDatePicker}
-                variant="outlined"
-              />
-              </Grid>
-              <Grid item xs={12}>
-              <CustomField
-                validation={validateDescription}
-                type="text"
-                placeholder="Short description"
-                label="Short description"
-                fullWidth={true}
-                name="description"
-                variant="outlined"
-                multiline={true}
-              />
-              </Grid>
-              
-              <DialogActions>
-                <Button type="submit" className={classes.button}>
-                  Add
-                </Button>
-                <Button className={classes.button} onClick={handleCloseModal}>
-                  Cancel
-                </Button>
-              </DialogActions>
+              <Grid container spacing={3} alignItems="center">
+                <Grid item xs={12}>
+                  <CustomField
+                    validation={validateTitle}
+                    type="text"
+                    placeholder="Title"
+                    label="Title"
+                    fullWidth={true}
+                    name="title"
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Field
+                    fullWidth
+                    name="importance"
+                    component={Select}
+                    label="Select importance"
+                    required
+                    formControlProps={{ fullWidth: true }}
+                    validate={validateImportance}
+                    variant="outlined"
+                  >
+                    <MenuItem value="high">High</MenuItem>
+                    <MenuItem value="medium">Medium</MenuItem>
+                    <MenuItem value="low">Low</MenuItem>
+                  </Field>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Field
+                    name="date"
+                    validate={validateDate}
+                    component={MuiDatePicker}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <CustomField
+                    validation={validateDescription}
+                    type="text"
+                    placeholder="Short description"
+                    label="Short description"
+                    fullWidth={true}
+                    name="description"
+                    variant="outlined"
+                    multiline={true}
+                  />
+                </Grid>
+
+                <DialogActions>
+                  <Button type="submit" className={classes.button}>
+                    Add
+                  </Button>
+                  <Button className={classes.button} onClick={handleCloseModal}>
+                    Cancel
+                  </Button>
+                </DialogActions>
               </Grid>
             </form>
           )}

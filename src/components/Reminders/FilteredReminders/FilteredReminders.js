@@ -12,6 +12,7 @@ const FilteredReminders = props => {
   const upcoming = useSelector(state => state.reminder.upcoming);
   const [choosedList, setChoosedList] = useState(null);
   const { criterium } = props.match.params;
+
   useEffect(() => {
     if (criterium) {
       if (criterium === "high") {
@@ -35,10 +36,12 @@ const FilteredReminders = props => {
       </Grid>
     );
   };
+
   const renderCriteriumName =
     criterium === "upcoming" || criterium === "tomorrow"
       ? `Your list of ${criterium} reminders`
       : `Your list of ${criterium} important reminders`;
+      
   return (
     <Grid container spacing={2}>
        <Grid item xs={12}>

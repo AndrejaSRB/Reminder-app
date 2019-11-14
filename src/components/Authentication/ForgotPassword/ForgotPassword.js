@@ -123,6 +123,7 @@ export default function ForgotPassword(props) {
         setErrorMessage(error.message);
       });
   }
+  
   const renderErrorMessage = errorMessage ? (
     <FormHelperText className={classes.errorMessage} margin="center">
       {errorMessage}

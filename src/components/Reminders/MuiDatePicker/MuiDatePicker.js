@@ -10,9 +10,11 @@ const DatePickers = props => {
     meta,
     ...rest
   } = props;
+
   const showError =
     ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) &&
     meta.touched;
+    
   return (
     <div>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>

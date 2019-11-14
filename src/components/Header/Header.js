@@ -5,7 +5,6 @@ import {Icon,Avatar} from "@material-ui/core";
 import { useSelector } from "react-redux";
 import fire from "../../config";
 
-
 const useStyles = makeStyles(theme => ({
   header: {
     height: 50,

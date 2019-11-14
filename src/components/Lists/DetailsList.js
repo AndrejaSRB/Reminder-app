@@ -4,7 +4,7 @@ import withDashboard from "../../hoc/withDashboard";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { useDispatch, useSelector } from "react-redux";
-import * as actionTypes from "../../store/actions/actionTypes/lists";
+import { deleteList } from "../../store/actions/actions/lists";
 import Loader from "../UI/Loader";
 
 const useStyles = makeStyles(theme => ({
@@ -41,13 +41,12 @@ const UserMenu = props => {
     let list = lists.find(
       list => list.value.name.toLowerCase() === pickedList.toLowerCase()
     );
-    dispatch({
-      type: actionTypes.DELETE_LIST,
-      payload: {
+    dispatch(
+      deleteList({
         listId: list.id,
         userId: user.uid
-      }
-    });
+      })
+    );
     props.history.push("/");
   };
 
@@ -58,6 +57,7 @@ const UserMenu = props => {
     setListInformation(list);
     handleEditModal(true)();
   };
+  
   const handleEditModal = isOpen => () => {
     setIsEditClicked(isOpen);
   };

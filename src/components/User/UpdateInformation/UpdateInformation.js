@@ -8,7 +8,7 @@ import Container from "@material-ui/core/Container";
 import fire, { storage } from "../../../config";
 import { useDispatch, useSelector } from "react-redux";
 import UploadPicture from "../UploadPicture/UploadPicture";
-import * as actionTypes from "../../../store/actions/actionTypes/reminders";
+import { saveUserProfileInformation, saveUserProfilePicture } from "../../../store/actions/actions/reminders";
 import uniqid from "uniqid";
 import Avatar from "@material-ui/core/Avatar";
 import Icon from "@material-ui/core/Icon";
@@ -131,7 +131,6 @@ const UpdateInformation = props => {
     const { userName, phone } = values;
     let user = fire.auth().currentUser;
     e.preventDefault();
-
     if (picture) {
       if (user != null) {
         storage
@@ -146,16 +145,10 @@ const UpdateInformation = props => {
                   phoneNumber: phone
                 })
                 .then(() => {
-                  dispatch({
-                    type: actionTypes.SAVE_USER_INFORMATION,
-                    payload: user
-                  });
+                  dispatch(saveUserProfileInformation(user));
                 });
             });
-            dispatch({
-              type: actionTypes.SAVE_USER_PROFILE_PICTURE,
-              payload: pictureUrl
-            });
+            dispatch(saveUserProfilePicture(pictureUrl));
             props.history.push("/user");
           });
       }
@@ -166,10 +159,7 @@ const UpdateInformation = props => {
           phoneNumber: phone
         })
         .then(() => {
-          dispatch({
-            type: actionTypes.SAVE_USER_INFORMATION,
-            payload: user
-          });
+          dispatch(saveUserProfileInformation(user));
           props.history.push("/user");
         });
     }

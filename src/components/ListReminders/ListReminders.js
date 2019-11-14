@@ -54,12 +54,14 @@ const ListToDo = () => {
       </Grid>
     );
   };
+
   const toggleTodayList = name => () => {
     setDisplayReminderList({
       ...displayReminderList,
       [name]: !displayReminderList[name]
     });
   };
+  
   const remainderModal = isAddModalOpen ? (
     <Suspense fallback={<Loader />}>
       <AddReminder handleModalAdd={handleModalAdd} open={isAddModalOpen} />

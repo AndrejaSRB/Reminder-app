@@ -29,6 +29,7 @@ const useStyles = makeStyles(theme => ({
 const PreviewPicture = props => {
   const classes = useStyles();
   const { pictureUrl } = props;
+  
   return (
     <div>
       <div className={classes.paper}>

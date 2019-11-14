@@ -21,7 +21,7 @@ export const postReminder = payload => {
   };
 };
 
-export const createReminder = payload => {
+export const deleteReminder = payload => {
   return {
     type: actionTypes.DELETE_REMINDER,
     payload

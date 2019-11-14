@@ -21,8 +21,9 @@ import clsx from "clsx";
 import Badge from "@material-ui/core/Badge";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import * as actionTypes from "../../store/actions/actionTypes/reminders";
-import { UPDATE_LIST } from "../../store/actions/actionTypes/lists";
+import { userLoggedOut, renderFilterRoute } from "../../store/actions/actions/reminders";
+import { updateList } from "../../store/actions/actions/lists";
+
 import fire from "../../config";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
@@ -180,12 +181,15 @@ const SideList = props => {
   useEffect(() => {
     setLists(listsArray);
   }, [listsArray]);
+
   const AddReminder = lazy(() =>
     import("../Reminders/AddReminder/AddReminder")
   );
+
   const handleModalAdd = isOpen => {
     setIsAddReminderModalOpen(isOpen);
   };
+
   const remainderModal = isAddReminderModalOpen ? (
     <Suspense fallback={<Loader />}>
       <AddReminder
@@ -232,6 +236,7 @@ const SideList = props => {
     },
     [lists]
   );
+
   const findListItem = useCallback(
     id => {
       const list = lists.filter(list => `${list.id}` === id)[0];
@@ -254,13 +259,10 @@ const SideList = props => {
       lists.forEach(list => {
         listObject[list.id] = list.value;
       });
-      dispatch({
-        type: UPDATE_LIST,
-        payload: {
-          userId: user.uid,
-          body: listObject
-        }
-      });
+      dispatch(updateList({
+        userId: user.uid,
+        body: listObject
+      }));
     }, 2000);
     setSyncInterval(interval);
   };
@@ -287,15 +289,13 @@ const SideList = props => {
     fire.auth().signOut();
     localStorage.removeItem("user");
     localStorage.removeItem("id");
-    dispatch({
-      type: actionTypes.USER_LOGGED_OUT
-    });
+    dispatch(userLoggedOut());
   };
+
   const handleClickFilter = () => {
-    dispatch({
-      type: actionTypes.RENDER_FILTER_ROUTE
-    });
-  }
+    dispatch(renderFilterRoute());
+  };
+
   const handleList = () => {
     setOpenList(!openList);
   };

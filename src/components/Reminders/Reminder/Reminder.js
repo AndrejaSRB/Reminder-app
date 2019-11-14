@@ -1,7 +1,7 @@
 import React, { useState, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import * as actionTypes from "../../../store/actions/actionTypes/reminders";
 import { useDispatch, useSelector } from "react-redux";
+import { deleteReminder } from "../../../store/actions/actions/reminders";
 import classNames from "classnames";
 import EditReminder from "../EditReminder/EditReminder";
 import MoreBtn from "../../UI/MoreBtn";
@@ -48,13 +48,12 @@ const SingleToDo = props => {
 
   const handleDelete = id => () => {
     setIsChecked(!isChecked);
-    dispatch({
-      type: actionTypes.DELETE_REMINDER,
-      payload: {
+    dispatch(
+      deleteReminder({
         id: id,
         userId: user.uid
-      }
-    });
+      })
+    );
   };
   const handleEditModalOpen = clicked => () => {
     setIsClickedMore(clicked);
@@ -106,7 +105,10 @@ const SingleToDo = props => {
             <CardContent className={classes.titleContent}>
               <Grid container spacing={1} alignItems="center">
                 <Grid item xs={2}>
-                  <CustomCheckbox checked={isChecked} onClick={handleDelete(props.id)}/>
+                  <CustomCheckbox
+                    checked={isChecked}
+                    onClick={handleDelete(props.id)}
+                  />
                 </Grid>
                 <Grid item xs={8}>
                   <Typography variant="subtitle2" component="h2">
@@ -114,7 +116,7 @@ const SingleToDo = props => {
                   </Typography>
                 </Grid>
                 <Grid item xs={2}>
-                <Icon onClick={handleEditModalOpen(true)}>more_vert</Icon>
+                  <Icon onClick={handleEditModalOpen(true)}>more_vert</Icon>
                 </Grid>
               </Grid>
             </CardContent>
